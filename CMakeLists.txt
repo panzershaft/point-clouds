@@ -9,13 +9,13 @@ link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
 add_library(my-bin
-	    hello.cpp
-	    hello.hpp
+	    #hello.cpp
+	    #hello.hpp
        	    matrix_transform.cpp
             matrix_transform.hpp)
 
-add_executable(hello hello.cpp)
-target_link_libraries(hello PRIVATE my-bin)
+#add_executable(hello hello.cpp)
+#target_link_libraries(hello PRIVATE my-bin)
 
 add_executable(pcd_write_test pcd_write.cpp)
 target_link_libraries(pcd_write_test ${PCL_LIBRARIES})
