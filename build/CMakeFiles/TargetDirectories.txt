@@ -1,3 +1,0 @@
-/home/soham/lmr_project/build/CMakeFiles/edit_cache.dir
-/home/soham/lmr_project/build/CMakeFiles/rebuild_cache.dir
-/home/soham/lmr_project/build/CMakeFiles/pcd_write_test.dir
