@@ -5,12 +5,11 @@
 #include <pcl/point_types.h>
 #include <pcl/filters/impl/filter.hpp>
 using namespace std;
+matrix_transform::PointCloudT::Ptr cloud_one (new pcl::PointCloud<pcl::PointXYZ>);
+matrix_transform::PointCloudT::Ptr cloud_two (new pcl::PointCloud<pcl::PointXYZ>);
 
-pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_one (new pcl::PointCloud<pcl::PointXYZ>);
-pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_two (new pcl::PointCloud<pcl::PointXYZ>);
 
-
-void matrix_transform::remove_nan(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in)
+void matrix_transform::remove_nan(matrix_transform::PointCloudT::Ptr cloud_in)
 {
   //NaN removal
   std::vector<int> index1;
