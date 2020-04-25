@@ -1,13 +1,10 @@
 #include <iostream>
-#include <string>
-#include <sstream>
+
 #include"matrix_transform.hpp"
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
 #include <pcl/filters/impl/filter.hpp>
 using namespace std;
-
-std::string input_path = "/home/soham/lmr_project/build/";
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_one (new pcl::PointCloud<pcl::PointXYZ>);
 pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_two (new pcl::PointCloud<pcl::PointXYZ>);
@@ -20,21 +17,16 @@ void matrix_transform::remove_nan(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in)
   pcl::removeNaNFromPointCloud(*cloud_in, *cloud_in, index1);
 }
 
-int main()
+int matrix_transform::file_loader(int i)
 {
-	
-	for(int i = 1; i < 2; i++)
-	{
-	  //stringstream ss;
+      //stringstream ss;
       std::stringstream sstream;
-      sstream << input_path << "/frame" << i << ".pcd";
+      sstream << matrix_transform::input_path << "/frame" << i << ".pcd";
       string file1 = sstream.str();
       sstream.str(std::string());
-      sstream << input_path << "/frame" << i + 9 << ".pcd";
+      sstream << matrix_transform::input_path << "/frame" << i + 9 << ".pcd";
       string file2 = sstream.str();
       sstream.str(std::string());
-      //sstream.clear();
-      cout << "\n--> " << file1 << "\n--> " << file2 << "\n";
       
       std::cout << "Loading: " << file1 << std::endl;
 	  
@@ -55,10 +47,18 @@ int main()
         PCL_ERROR("Couldn't read the second file! \n"); // In case of file not being read
         return (-1);
       }
-
+      
 	    sstream.clear();
   	  file1.clear();
 	    file2.clear();
+}
+
+int main()
+{
+	
+	for(int i = 1; i < 2; i++)
+	{
+	    matrix_transform::file_loader(i);
 	}
 	
 }   
