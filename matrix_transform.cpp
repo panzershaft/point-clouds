@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-
+#include"matrix_transform.hpp"
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
 #include <pcl/filters/impl/filter.hpp>
@@ -13,8 +13,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_one (new pcl::PointCloud<pcl::PointXYZ
 pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_two (new pcl::PointCloud<pcl::PointXYZ>);
 
 
-
-void remove_nan(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in)
+void matrix_transform::remove_nan(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in)
 {
   //NaN removal
   std::vector<int> index1;
@@ -39,7 +38,7 @@ int main()
       
       std::cout << "Loading: " << file1 << std::endl;
 	  
-      remove_nan(cloud_one);
+      matrix_transform::remove_nan(cloud_one);
       if (pcl::io::loadPCDFile(file1, *cloud_one) == -1)
       {
       
@@ -49,7 +48,7 @@ int main()
       }
 
       //NaN removal
-      remove_nan(cloud_two);
+      matrix_transform::remove_nan(cloud_two);
       std::cout << "Loading: " << file2 << std::endl;
       if (pcl::io::loadPCDFile(file2, *cloud_two) == -1)
       {
