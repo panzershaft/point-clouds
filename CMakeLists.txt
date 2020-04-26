@@ -15,7 +15,10 @@ add_library(my-bin
 	    #hello.cpp
 	    #hello.hpp
        	    matrix_transform.cpp
-            matrix_transform.hpp)
+            matrix_transform.hpp
+       	    ICP.cpp
+	    ICP.hpp
+	    main.cpp)
 
 #add_executable(hello hello.cpp)
 #target_link_libraries(hello PRIVATE my-bin)
@@ -32,3 +35,8 @@ target_link_libraries (concatenate_clouds ${PCL_LIBRARIES})
 add_executable (matrix_transform matrix_transform.cpp)
 target_link_libraries (matrix_transform PRIVATE my-bin ${PCL_LIBRARIES})
 
+add_executable (ICP ICP.cpp)
+target_link_libraries (ICP PRIVATE my-bin ${PCL_LIBRARIES})
+
+add_executable (main main.cpp)
+target_link_libraries (main PRIVATE my-bin ${PCL_LIBRARIES})
