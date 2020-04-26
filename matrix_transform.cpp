@@ -1,19 +1,25 @@
-#include <iostream>
 
 #include"matrix_transform.hpp"
-#include <pcl/io/pcd_io.h>
-#include <pcl/point_types.h>
-#include <pcl/filters/impl/filter.hpp>
-using namespace std;
+
 matrix_transform::PointCloudT::Ptr cloud_one (new pcl::PointCloud<pcl::PointXYZ>);
 matrix_transform::PointCloudT::Ptr cloud_two (new pcl::PointCloud<pcl::PointXYZ>);
-
+matrix_transform::PointCloudT cloud_c;
 
 void matrix_transform::remove_nan(matrix_transform::PointCloudT::Ptr cloud_in)
 {
   //NaN removal
   std::vector<int> index1;
   pcl::removeNaNFromPointCloud(*cloud_in, *cloud_in, index1);
+}
+
+void matrix_transform::lets_concat(matrix_transform::PointCloudT::Ptr cloud_a,
+    matrix_transform::PointCloudT::Ptr cloud_b)
+{  
+      cloud_c  = *cloud_a;
+      cloud_c += *cloud_b;
+      std::cerr << "Cloud C: " << std::endl;
+      pcl::io::savePCDFileASCII ("cloud_concatenate.pcd", cloud_c);
+      std::cerr << "Saved " << cloud_c.points.size () << " data points to cloud_concatenate.pcd." << std::endl;
 }
 
 int matrix_transform::file_loader(int i)
@@ -38,7 +44,6 @@ int matrix_transform::file_loader(int i)
       
       }
 
-      //NaN removal
       matrix_transform::remove_nan(cloud_two);
       std::cout << "Loading: " << file2 << std::endl;
       if (pcl::io::loadPCDFile(file2, *cloud_two) == -1)
@@ -46,7 +51,7 @@ int matrix_transform::file_loader(int i)
         PCL_ERROR("Couldn't read the second file! \n"); // In case of file not being read
         return (-1);
       }
-      
+      matrix_transform::lets_concat(cloud_one, cloud_two);
 	    sstream.clear();
   	  file1.clear();
 	    file2.clear();
