@@ -1,3 +1,9 @@
+/*    
+ *     
+ * Created by Soham 26/04/2020
+ *   
+ */
+
 #include"matrix_transform.hpp"
 
 
@@ -33,21 +39,22 @@ int matrix_transform::file_loader(int i) {
 
   std::cout << "Loading: " << file1 << std::endl;
 
-  matrix_transform::remove_nan(cloud_one);
+  
   if (pcl::io::loadPCDFile(file1, * cloud_one) == -1) {
 
     PCL_ERROR("Couldn't read first file! \n"); // In case of file not being read
     return (-1);
 
   }
+  matrix_transform::remove_nan(cloud_one);
 
-  matrix_transform::remove_nan(cloud_two);
+  
   std::cout << "Loading: " << file2 << std::endl;
   if (pcl::io::loadPCDFile(file2, * cloud_two) == -1) {
     PCL_ERROR("Couldn't read the second file! \n"); // In case of file not being read
     return (-1);
   }
-
+  matrix_transform::remove_nan(cloud_two);
   //now we add the two point clouds
   // matrix_transform::lets_concat(cloud_one, cloud_two);
 

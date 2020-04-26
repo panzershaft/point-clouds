@@ -1,3 +1,8 @@
+/*    
+ *     
+ * Created by Soham 26/04/2020
+ *   
+ */
 
 #ifndef MATRIX_TRANSFORM_HPP_INCLUDED
 #define MATRIX_TRANSFORM_INCLUDED
@@ -11,12 +16,16 @@
 #include <pcl/common/transforms.h>
 #include <pcl/visualization/pcl_visualizer.h>
 #include <pcl/filters/impl/filter.hpp>
+#include <pcl/point_types.h>
+#include <pcl/filters/voxel_grid.h>
+
 using namespace std;
 
 namespace matrix_transform
 {
 	typedef pcl::PointXYZ PointT;
 	typedef pcl::PointCloud<PointT> PointCloudT;
+	typedef pcl::VoxelGrid<pcl::PointXYZ> vg;
 	std::string input_path = "/home/soham/lmr_project/build/";
 	void remove_nan(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in);
 	void lets_concat(pcl::PointCloud<pcl::PointXYZ>::Ptr a, pcl::PointCloud<pcl::PointXYZ>::Ptr b);
