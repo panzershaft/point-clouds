@@ -20,7 +20,6 @@ namespace matrix_transform
 	std::string input_path = "/home/soham/lmr_project/build/";
 	void remove_nan(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in);
 	void lets_concat(pcl::PointCloud<pcl::PointXYZ>::Ptr a, pcl::PointCloud<pcl::PointXYZ>::Ptr b);
-	void do_transform_and_visualize();
 	int file_loader(int i);
 }
 #endif
