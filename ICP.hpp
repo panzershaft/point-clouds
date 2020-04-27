@@ -22,19 +22,21 @@
 
 using namespace std;
 
-class  IcpTime{
+class  ICP{
+typedef pcl::PointXYZ PointT;
+typedef pcl::PointCloud<PointT> PointCloudT;
+typedef pcl::visualization::PCLVisualizer viz;
+typedef pcl::visualization::PointCloudColorHandlerCustom < pcl::PointXYZ > CustomColour;
+typedef pcl::IterativeClosestPoint < pcl::PointXYZ, pcl::PointXYZ > icp;
+
 public:
-    typedef pcl::PointXYZ PointT;
-	typedef pcl::PointCloud<PointT> PointCloudT;
-    typedef pcl::VoxelGrid<pcl::PointXYZ> vg;
-    IcpTime();
-    ~IcpTime();	 
+    ICP();
+    ~ICP();	 
     int file_loader();
-    void remove_nan(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in);
-    int ICPalgorithm(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_icp,
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_tr);
-    void go_voxel(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_a, 
-    IcpTime::PointCloudT::Ptr cloud_b);
+    void remove_nan(ICP::PointCloudT::Ptr cloud_in);
+    int ICPalgorithm(ICP::PointCloudT::Ptr cloud_icp, ICP::PointCloudT::Ptr cloud_tr);
+    void go_voxel(ICP::PointCloudT::Ptr cloud_a, ICP::PointCloudT::Ptr cloud_b);
+    void colour_time(ICP::PointCloudT::Ptr cloud_a, ICP::PointCloudT::Ptr cloud_b);
     
 };
 

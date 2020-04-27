@@ -7,7 +7,7 @@
 #include"ICP.hpp"
 
 int main(){
-    IcpTime *n = new IcpTime();
+    ICP *n = new ICP();
     n->file_loader();
     delete n;
 }
