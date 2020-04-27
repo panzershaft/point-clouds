@@ -7,4 +7,4 @@ Voxelized point cloud:
 
 Simple ICP example:
 
-![](images/SimpleICP.png)
+![](images/vSimpleICP.png)
