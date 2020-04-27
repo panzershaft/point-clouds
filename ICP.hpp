@@ -23,11 +23,12 @@
 using namespace std;
 
 class  ICP{
-typedef pcl::PointXYZ PointT;
-typedef pcl::PointCloud<PointT> PointCloudT;
-typedef pcl::visualization::PCLVisualizer viz;
-typedef pcl::visualization::PointCloudColorHandlerCustom < pcl::PointXYZ > CustomColour;
-typedef pcl::IterativeClosestPoint < pcl::PointXYZ, pcl::PointXYZ > icp;
+private:        
+    typedef pcl::PointXYZ PointT;
+    typedef pcl::PointCloud<PointT> PointCloudT;
+    typedef pcl::visualization::PCLVisualizer viz;
+    typedef pcl::visualization::PointCloudColorHandlerCustom < pcl::PointXYZ > CustomColour;
+    typedef pcl::IterativeClosestPoint < pcl::PointXYZ, pcl::PointXYZ > icp;
 public:
     ICP();
     ~ICP();	 
