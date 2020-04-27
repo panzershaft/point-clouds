@@ -21,22 +21,29 @@
 #include <pcl/filters/voxel_grid.h>
 
 using namespace std;
+typedef pcl::PointXYZ PointT;
+typedef pcl::PointCloud<PointT> PointCloudT;
+typedef pcl::visualization::PCLVisualizer viz;
+typedef pcl::visualization::PointCloudColorHandlerCustom < pcl::PointXYZ > CustomColour;
+typedef pcl::IterativeClosestPoint < pcl::PointXYZ, pcl::PointXYZ > icp;
 
 class  ICP{
+
 private:        
-    typedef pcl::PointXYZ PointT;
-    typedef pcl::PointCloud<PointT> PointCloudT;
-    typedef pcl::visualization::PCLVisualizer viz;
-    typedef pcl::visualization::PointCloudColorHandlerCustom < pcl::PointXYZ > CustomColour;
-    typedef pcl::IterativeClosestPoint < pcl::PointXYZ, pcl::PointXYZ > icp;
+    PointCloudT::Ptr cloud_one;
+    PointCloudT::Ptr cloud_two;
+    PointCloudT::Ptr cloud_filtered_one;
+    PointCloudT::Ptr cloud_filtered_two;
+    PointCloudT::Ptr cloud_icp;
+
 public:
     ICP();
     ~ICP();	 
     int file_loader();
-    void remove_nan(ICP::PointCloudT::Ptr cloud_in);
-    int ICPalgorithm(ICP::PointCloudT::Ptr cloud_icp, ICP::PointCloudT::Ptr cloud_tr);
-    void go_voxel(ICP::PointCloudT::Ptr cloud_a, ICP::PointCloudT::Ptr cloud_b);
-    void colour_time(ICP::PointCloudT::Ptr cloud_a, ICP::PointCloudT::Ptr cloud_b);
+    void remove_nan(PointCloudT::Ptr cloud_in);
+    int run_ICP_algorithm(PointCloudT::Ptr cloud_icp, PointCloudT::Ptr cloud_tr);
+    void go_voxel(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b);
+    void colour_time(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b);
     
 };
 

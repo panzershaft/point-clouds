@@ -11,24 +11,21 @@
 
 
 ICP::ICP() {}
-
 ICP::~ICP() {}
 
-
-
-void ICP::remove_nan(ICP::PointCloudT::Ptr cloud_in) {
+void ICP::remove_nan(PointCloudT::Ptr cloud_in) {
   vector < int > index1;
   pcl::removeNaNFromPointCloud( * cloud_in, * cloud_in, index1);
 }
 
-int ICP::ICPalgorithm(ICP::PointCloudT::Ptr cloud_icp,
-  ICP::PointCloudT::Ptr cloud_tr) {
+int ICP::run_ICP_algorithm(PointCloudT::Ptr cloud_filtered_one,
+  PointCloudT::Ptr cloud_filtered_two) {
 
-  ICP::icp icp;
-  icp.setInputSource(cloud_icp);
-  icp.setInputTarget(cloud_tr);
+  icp icp;
+  icp.setInputSource(cloud_filtered_one);
+  icp.setInputTarget(cloud_filtered_two);
 
-  ICP::PointCloudT Final;
+  PointCloudT Final;
   icp.align(Final);
   pcl::io::savePCDFileASCII ("icp_pcd.pcd", Final);
 
@@ -39,8 +36,8 @@ int ICP::ICPalgorithm(ICP::PointCloudT::Ptr cloud_icp,
 
 }
 
-void ICP::go_voxel(ICP::PointCloudT::Ptr cloud_a,
-        ICP::PointCloudT::Ptr cloud_filter){
+void ICP::go_voxel(PointCloudT::Ptr cloud_a,
+        PointCloudT::Ptr cloud_filter){
 
     pcl::VoxelGrid<pcl::PointXYZ> vg;
     vg.setInputCloud (cloud_a);
@@ -48,17 +45,17 @@ void ICP::go_voxel(ICP::PointCloudT::Ptr cloud_a,
     vg.filter (*cloud_filter);
 }
 
-void ICP::colour_time(ICP::PointCloudT::Ptr cloud_filtered_two,
-        ICP::PointCloudT::Ptr cloud_icp){
+void ICP::colour_time(PointCloudT::Ptr cloud_filtered_two,
+        PointCloudT::Ptr cloud_icp){
     
     printf("\nPoint cloud colors :  white  = original point cloud\n"
         "                        red  = transformed point cloud\n");
-    ICP::viz viewer("ICP example");
+    viz viewer("ICP example");
 
-    ICP::CustomColour source_cloud_color_handler(cloud_filtered_two, 255, 255, 255);
-    viewer.addPointCloud(cloud_filtered_two, source_cloud_color_handler, "target cloud");
+    CustomColour source_cloud_color_handler(cloud_filtered_one, 255, 255, 255);
+    viewer.addPointCloud(cloud_filtered_one, source_cloud_color_handler, "target cloud");
 
-    ICP::CustomColour transformed_cloud_color_handler(cloud_icp, 230, 20, 20); // Red
+    CustomColour transformed_cloud_color_handler(cloud_icp, 230, 20, 20); // Red
     viewer.addPointCloud(cloud_icp, transformed_cloud_color_handler, "aligned cloud");
 
     viewer.setBackgroundColor(0.05, 0.05, 0.05, 0); 
@@ -71,26 +68,28 @@ void ICP::colour_time(ICP::PointCloudT::Ptr cloud_filtered_two,
 }
 
 int ICP::file_loader() {
-  ICP::PointCloudT::Ptr cloud_one(new ICP::PointCloudT);
-  ICP::PointCloudT::Ptr cloud_two(new ICP::PointCloudT);
-  ICP::PointCloudT::Ptr cloud_filtered_one (new ICP::PointCloudT);
-  ICP::PointCloudT::Ptr cloud_filtered_two (new ICP::PointCloudT);
-  ICP::PointCloudT::Ptr cloud_icp (new ICP::PointCloudT);
+  ICP::cloud_one = PointCloudT::Ptr(new PointCloudT);
+  ICP::cloud_two = PointCloudT::Ptr(new PointCloudT);
+  ICP::cloud_filtered_one = PointCloudT::Ptr(new PointCloudT);
+  ICP::cloud_filtered_two = PointCloudT::Ptr(new PointCloudT);
+  ICP::cloud_icp = PointCloudT::Ptr(new PointCloudT);
 
   pcl::PCDReader reader;
   
   reader.read ("frame1.pcd", *cloud_one); 
+  // pcl::io::loadPCDFile("/home/soham/wow/src/my_pcl_tutorial/k2b/frame0.pcd", *cloud_one);
   ICP::remove_nan(cloud_one);
   ICP::go_voxel(cloud_one, cloud_filtered_one);
 
   reader.read ("frame10.pcd", *cloud_two);
+  // pcl::io::loadPCDFile("/home/soham/wow/src/my_pcl_tutorial/k2b/frame8.pcd", *cloud_two);
   ICP::remove_nan(cloud_two);
   ICP::go_voxel(cloud_two, cloud_filtered_two);
 
-  ICP::ICPalgorithm(cloud_filtered_one, cloud_filtered_two);
+  ICP::run_ICP_algorithm(cloud_filtered_one, cloud_filtered_two);
 
   reader.read ("icp_pcd.pcd", *cloud_icp);
 
-  ICP::colour_time(cloud_filtered_two, cloud_icp);
+  ICP::colour_time(cloud_filtered_one, cloud_icp);
   
 }
