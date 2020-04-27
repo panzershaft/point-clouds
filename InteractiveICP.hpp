@@ -29,12 +29,13 @@ typedef pcl::IterativeClosestPoint < pcl::PointXYZ, pcl::PointXYZ > icp;
 
 class  InteractiveICP{
 
-private:        
+private:   
     PointCloudT::Ptr cloud_one;
     PointCloudT::Ptr cloud_two;
     PointCloudT::Ptr cloud_in;
     PointCloudT::Ptr cloud_tr;
     PointCloudT::Ptr cloud_icp;
+    PointCloudT::Ptr cloud_model;
     
     
 public:
@@ -43,6 +44,7 @@ public:
     int file_loader();
     void remove_nan(PointCloudT::Ptr cloud_in);
     void go_voxel(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b);
+    void down_sampler(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b);
     void colour_time(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b, PointCloudT::Ptr cloud_c);
     
 };

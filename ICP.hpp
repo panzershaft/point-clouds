@@ -28,21 +28,21 @@ typedef pcl::visualization::PointCloudColorHandlerCustom < pcl::PointXYZ > Custo
 typedef pcl::IterativeClosestPoint < pcl::PointXYZ, pcl::PointXYZ > icp;
 
 class  ICP{
-
-private:        
-    PointCloudT::Ptr cloud_one;
+protected:
+    PointCloudT::Ptr cloud_one;     
     PointCloudT::Ptr cloud_two;
     PointCloudT::Ptr cloud_in;
     PointCloudT::Ptr cloud_tr;
     PointCloudT::Ptr cloud_icp;
+    
 public:
     ICP();
     ~ICP();	 
     int file_loader();
     void remove_nan(PointCloudT::Ptr cloud_in);
-    int run_ICP_algorithm(PointCloudT::Ptr cloud_icp, PointCloudT::Ptr cloud_tr);
+    int run_ICP_algorithm();
     void go_voxel(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b);
-    void colour_time(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b, PointCloudT::Ptr cloud_c);
+    void colour_time();
     
 };
 

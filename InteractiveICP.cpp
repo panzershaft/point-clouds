@@ -8,10 +8,19 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
 #include <pcl/filters/voxel_grid.h>
+
+pcl::VoxelGrid<pcl::PointXYZ> vg;     
+pcl::PCDReader reader;
+
 bool next_iteration = false;
 Eigen::Matrix4d transformation_matrix = Eigen::Matrix4d::Identity ();
 
-InteractiveICP::InteractiveICP() {}
+InteractiveICP::InteractiveICP()  :cloud_one(new PointCloudT()), 
+                                  cloud_two(new PointCloudT()),
+                                  cloud_in(new PointCloudT()),
+                                  cloud_tr(new PointCloudT()),
+                                  cloud_icp(new PointCloudT()),
+                                  cloud_model(new PointCloudT()){}
 InteractiveICP::~InteractiveICP() {}
 
 void keyboardEventOccurred(const pcl::visualization::KeyboardEvent &event, void *nothing)
@@ -30,35 +39,31 @@ void InteractiveICP::remove_nan(PointCloudT::Ptr cloud_in)
 
 void InteractiveICP::go_voxel(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_filter)
 {
-    pcl::VoxelGrid<pcl::PointXYZ> vg;
+    
     vg.setInputCloud (cloud_a);
     vg.setLeafSize (0.01f, 0.01f, 0.01f);
     vg.filter (*cloud_filter);
 }
 
+void InteractiveICP::down_sampler(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b)
+{
+  InteractiveICP::remove_nan(cloud_a);
+  InteractiveICP::go_voxel(cloud_a, cloud_b);
+}
 
 int InteractiveICP::file_loader() 
 {
-
-  InteractiveICP::cloud_one = PointCloudT::Ptr(new PointCloudT);
-  InteractiveICP::cloud_two = PointCloudT::Ptr(new PointCloudT);
-  InteractiveICP::cloud_in = PointCloudT::Ptr(new PointCloudT);
-  InteractiveICP::cloud_tr = PointCloudT::Ptr(new PointCloudT);
-  InteractiveICP::cloud_icp = PointCloudT::Ptr(new PointCloudT);
-  pcl::PCDReader reader;
-  
+  icp icp;
+  Eigen::Matrix4d transformation_matrix = Eigen::Matrix4d::Identity ();
+  viz viewer("ICP example");
   reader.read ("/home/soham/wow/src/my_pcl_tutorial/Pure_Filter/frame1.pcd", *cloud_one); 
-  InteractiveICP::remove_nan(cloud_one);
-  InteractiveICP::go_voxel(cloud_one, cloud_in);
+  InteractiveICP::down_sampler(cloud_one, cloud_in);
 
   reader.read ("/home/soham/wow/src/my_pcl_tutorial/Pure_Filter/frame10.pcd", *cloud_two);
-  InteractiveICP::remove_nan(cloud_two);
-  InteractiveICP::go_voxel(cloud_two, cloud_tr);
-  
+  InteractiveICP::down_sampler(cloud_two, cloud_tr);
   *cloud_icp = *cloud_in;
-  icp icp;
-  viz viewer("ICP example");
-
+  
+  
   CustomColour source_cloud_color_handler(cloud_in, 255, 255, 255);
   viewer.removePointCloud("source_cloud_color_handler");
   viewer.addPointCloud(cloud_in, source_cloud_color_handler, "source_cloud_color_handler");
@@ -92,18 +97,19 @@ int InteractiveICP::file_loader()
           icp.setInputTarget(cloud_tr);
           icp.align(*cloud_icp);
 
-          printf("\nPoint cloud colors :  white  = source point cloud\n"
-                  "                       green  = target point cloud\n"
-                  "                       red  = transformed point cloud\n");
-          cout << "\nhas converged:" << icp.hasConverged() << " score: " << icp.getFitnessScore() << endl;
-          cout << icp.getFinalTransformation() << endl;
           if (icp.hasConverged())
           {
+            printf("\nPoint cloud colors :  white  = source point cloud\n"
+                  "                       green  = target point cloud\n"
+                  "                       red  = transformed point cloud\n");
+            cout << "\nhas converged:" << icp.hasConverged() << " score: " << icp.getFitnessScore() << endl;
+            transformation_matrix *=  icp.getFinalTransformation().cast<double>();
+            pcl::transformPointCloud (*cloud_in, *cloud_model, transformation_matrix);
+            cout << icp.getFinalTransformation() << endl;
             std::cout << "\nICP has converged, score is " <<  icp.getFitnessScore() << std::endl;
             viewer.updatePointCloud(cloud_in, source_cloud_color_handler, "source_cloud_color_handler");
             viewer.updatePointCloud(cloud_tr, target_cloud_color_handler, "target_cloud_color_handler");
             viewer.updatePointCloud(cloud_icp, transformed_cloud_color_handler, "transformed_cloud_color_handler");
-        
           }
           else
           {

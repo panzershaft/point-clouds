@@ -10,7 +10,13 @@
 #include <pcl/filters/voxel_grid.h>
 
 
-ICP::ICP() {}
+ICP::ICP()  :cloud_one(new PointCloudT()), 
+             cloud_two(new PointCloudT()),
+             cloud_in(new PointCloudT()),
+             cloud_tr(new PointCloudT()),
+             cloud_icp(new PointCloudT())
+             
+{}
 ICP::~ICP() {}
 
 void ICP::remove_nan(PointCloudT::Ptr cloud_in) {
@@ -19,8 +25,7 @@ void ICP::remove_nan(PointCloudT::Ptr cloud_in) {
 }
 
 
-int ICP::run_ICP_algorithm(PointCloudT::Ptr cloud_icp,
-  PointCloudT::Ptr cloud_tr) {
+int ICP::run_ICP_algorithm() {
 
   icp icp;
   icp.setInputSource(cloud_icp);
@@ -46,9 +51,7 @@ void ICP::go_voxel(PointCloudT::Ptr cloud_a,
     vg.filter (*cloud_filter);
 }
 
-void ICP::colour_time(PointCloudT::Ptr cloud_in,
-        PointCloudT::Ptr cloud_tr,
-        PointCloudT::Ptr cloud_icp){
+void ICP::colour_time(){
     
     printf("\nPoint cloud colors :  white  = source point cloud\n"
         "                        green  = target point cloud\n"
@@ -75,11 +78,6 @@ void ICP::colour_time(PointCloudT::Ptr cloud_in,
 }
 
 int ICP::file_loader() {
-  ICP::cloud_one = PointCloudT::Ptr(new PointCloudT);
-  ICP::cloud_two = PointCloudT::Ptr(new PointCloudT);
-  ICP::cloud_in = PointCloudT::Ptr(new PointCloudT);
-  ICP::cloud_tr = PointCloudT::Ptr(new PointCloudT);
-  ICP::cloud_icp = PointCloudT::Ptr(new PointCloudT);
   pcl::PCDReader reader;
 
   reader.read ("frame1.pcd", *cloud_one); 
@@ -93,9 +91,9 @@ int ICP::file_loader() {
   ICP::go_voxel(cloud_two, cloud_tr);
   
   *cloud_icp = *cloud_in;
-  ICP::run_ICP_algorithm(cloud_icp, cloud_tr);
+  ICP::run_ICP_algorithm();
   // reader.read ("icp_pcd.pcd", *cloud_icp);
 
-  ICP::colour_time(cloud_in, cloud_tr, cloud_icp);
+  ICP::colour_time();
   
 }
