@@ -28,7 +28,6 @@ typedef pcl::PointCloud<PointT> PointCloudT;
 typedef pcl::visualization::PCLVisualizer viz;
 typedef pcl::visualization::PointCloudColorHandlerCustom < pcl::PointXYZ > CustomColour;
 typedef pcl::IterativeClosestPoint < pcl::PointXYZ, pcl::PointXYZ > icp;
-
 public:
     ICP();
     ~ICP();	 

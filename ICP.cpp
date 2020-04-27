@@ -14,6 +14,8 @@ ICP::ICP() {}
 
 ICP::~ICP() {}
 
+
+
 void ICP::remove_nan(ICP::PointCloudT::Ptr cloud_in) {
   vector < int > index1;
   pcl::removeNaNFromPointCloud( * cloud_in, * cloud_in, index1);
@@ -51,7 +53,7 @@ void ICP::colour_time(ICP::PointCloudT::Ptr cloud_filtered_two,
     
     printf("\nPoint cloud colors :  white  = original point cloud\n"
         "                        red  = transformed point cloud\n");
-    ICP::viz viewer("Matrix transformation example");
+    ICP::viz viewer("ICP example");
 
     ICP::CustomColour source_cloud_color_handler(cloud_filtered_two, 255, 255, 255);
     viewer.addPointCloud(cloud_filtered_two, source_cloud_color_handler, "target cloud");
