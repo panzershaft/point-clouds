@@ -1,11 +1,11 @@
 /*    
  *     
- * Created by Soham 26/04/2020
+ * Created by Soham 27/04/2020
  *   
  */
 
-#ifndef ICPTIME_HPP_INCLUDED
-#define ICPTIME_INCLUDED
+#ifndef INTERACTIVEICP_HPP_INCLUDED
+#define INTERACTIVEICP_INCLUDED
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -27,7 +27,7 @@ typedef pcl::visualization::PCLVisualizer viz;
 typedef pcl::visualization::PointCloudColorHandlerCustom < pcl::PointXYZ > CustomColour;
 typedef pcl::IterativeClosestPoint < pcl::PointXYZ, pcl::PointXYZ > icp;
 
-class  ICP{
+class  InteractiveICP{
 
 private:        
     PointCloudT::Ptr cloud_one;
@@ -35,12 +35,13 @@ private:
     PointCloudT::Ptr cloud_in;
     PointCloudT::Ptr cloud_tr;
     PointCloudT::Ptr cloud_icp;
+    
+    
 public:
-    ICP();
-    ~ICP();	 
+    InteractiveICP();
+    ~InteractiveICP();	 
     int file_loader();
     void remove_nan(PointCloudT::Ptr cloud_in);
-    int run_ICP_algorithm(PointCloudT::Ptr cloud_icp, PointCloudT::Ptr cloud_tr);
     void go_voxel(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b);
     void colour_time(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b, PointCloudT::Ptr cloud_c);
     

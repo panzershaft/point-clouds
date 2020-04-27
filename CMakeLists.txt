@@ -12,28 +12,21 @@ link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
 add_library(my-bin
-	    #hello.cpp
-	    #hello.hpp
-       	    #matrix_transform.cpp
-            #matrix_transform.hpp
+	    InteractiveICP.cpp
+	    InteractiveICP.hpp
        	    ICP.cpp
 	    ICP.hpp
-	    main.cpp)
-
-#add_executable(pcd_write_test pcd_write.cpp)
-#target_link_libraries(pcd_write_test ${PCL_LIBRARIES})
-
-#add_executable (concatenate_clouds concatenate_clouds.cpp)
-#target_link_libraries (concatenate_clouds ${PCL_LIBRARIES})
-
-#add_executable (matrix_transform matrix_transform.cpp)
-#target_link_libraries (matrix_transform PRIVATE my-bin ${PCL_LIBRARIES})
-
-add_executable (voxel voxel.cpp)
-target_link_libraries (voxel ${PCL_LIBRARIES})
+	    main.cpp
+	    Test.cpp)
 
 add_executable (ICP ICP.cpp)
 target_link_libraries (ICP PRIVATE my-bin ${PCL_LIBRARIES})
 
 add_executable (main main.cpp)
 target_link_libraries (main PRIVATE my-bin ${PCL_LIBRARIES})
+
+add_executable (InteractiveICP InteractiveICP.cpp)
+target_link_libraries (InteractiveICP PRIVATE my-bin ${PCL_LIBRARIES})
+
+add_executable (Test Test.cpp)
+target_link_libraries (Test PRIVATE my-bin ${PCL_LIBRARIES})
