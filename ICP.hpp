@@ -43,7 +43,7 @@ public:
     void remove_nan(PointCloudT::Ptr cloud_in);
     int run_ICP_algorithm(PointCloudT::Ptr cloud_icp, PointCloudT::Ptr cloud_tr);
     void go_voxel(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b);
-    void colour_time(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b);
+    void colour_time(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b, PointCloudT::Ptr cloud_c);
     
 };
 
