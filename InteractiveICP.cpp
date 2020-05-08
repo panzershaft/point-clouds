@@ -86,7 +86,7 @@ int InteractiveICP::fileLoader(int file_index,
   }
 
 int InteractiveICP::Runner() {
-  step_size = 1;
+  step_size = 10; //step_size depends on the quality of your frames, 10 works better for my files
   icp icp;
   Eigen::Matrix4d total_matrix = Eigen::Matrix4d::Identity ();
   std::vector<Eigen::Matrix4d> poses;
@@ -96,16 +96,20 @@ int InteractiveICP::Runner() {
   for (int file_index = 0; file_index < 100; file_index+=step_size) {
     fileLoader(file_index, step_size, cloud_one, cloud_two, cloud_icp);
     Eigen::Matrix4d transformation_matrix = Eigen::Matrix4d::Identity ();
+    CustomColour icp_cloud_color_handler(cloud_icp, 80, 5, 431); // blue: cloud_icp
+    viewer.removePointCloud("icp_cloud_color_handler");
+    viewer.addPointCloud(cloud_icp, icp_cloud_color_handler, "icp_cloud_color_handler");
 
-    CustomColour source_cloud_color_handler(cloud_static, 255, 255, 255);
+
+    CustomColour source_cloud_color_handler(cloud_static, 255, 255, 255); // white: First input cloud
     viewer.removePointCloud("source_cloud_color_handler");
     viewer.addPointCloud(cloud_static, source_cloud_color_handler, "source_cloud_color_handler");
 
-    CustomColour target_cloud_color_handler(cloud_tr, 20, 180, 20);
+    CustomColour target_cloud_color_handler(cloud_tr, 20, 180, 20); // green: target cloud
     viewer.removePointCloud("target_cloud_color_handler");
     viewer.addPointCloud(cloud_tr, target_cloud_color_handler, "target_cloud_color_handler");
 
-    CustomColour transformed_cloud_color_handler(cloud_model, 230, 20, 20); // Red
+    CustomColour transformed_cloud_color_handler(cloud_model, 230, 20, 20); // Red: compunded matrix
     viewer.removePointCloud("transformed_cloud_color_handler");
     viewer.addPointCloud(cloud_model, transformed_cloud_color_handler, "transformed_cloud_color_handler");
 
@@ -115,9 +119,8 @@ int InteractiveICP::Runner() {
     viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, "transformed_cloud_color_handler");
 
     viewer.registerKeyboardCallback( & keyboardEventOccurred, (void * ) NULL);
-    if (viewer.wasStopped() == true) {
-      viewer.spinOnce();
-    }
+    
+    if (viewer.wasStopped() == true) { viewer.spinOnce(); }
 
     total_matrix = compute_compound_transforamtion(poses);
 
@@ -131,8 +134,9 @@ int InteractiveICP::Runner() {
         transformation_matrix = icp.getFinalTransformation().cast<double> () * transformation_matrix;
         if (icp.hasConverged()) {
           printf("\nPoint cloud colors :  white  = source point cloud\n"
-            "                       green  = target point cloud\n"
-            "                       red  = transformed point cloud\n");
+            "                      green  = target point cloud\n"
+            "                      blue: = transformed point cloud (cloud_icp)\n"
+            "                      red  = transformed point cloud (compunded matrix of white)\n");
           cout << "\nhas converged:" << icp.hasConverged() << " score: " << icp.getFitnessScore() << endl;
           
           
@@ -141,6 +145,8 @@ int InteractiveICP::Runner() {
           pcl::transformPointCloud( * cloud_static, * cloud_model, current_matrix);
           cout << icp.getFinalTransformation() << endl;
           std::cout << "\nICP has converged, score is " << icp.getFitnessScore() << std::endl;
+          
+          viewer.updatePointCloud(cloud_icp, icp_cloud_color_handler, "icp_cloud_color_handler");
           viewer.updatePointCloud(cloud_static, source_cloud_color_handler, "source_cloud_color_handler");
           viewer.updatePointCloud(cloud_tr, target_cloud_color_handler, "target_cloud_color_handler");
           viewer.updatePointCloud(cloud_model, transformed_cloud_color_handler, "transformed_cloud_color_handler");
