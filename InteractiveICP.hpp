@@ -36,17 +36,23 @@ private:
     PointCloudT::Ptr cloud_tr;
     PointCloudT::Ptr cloud_icp;
     PointCloudT::Ptr cloud_model;
+    int step_size;
+    pcl::VoxelGrid < pcl::PointXYZ > vg;
+    pcl::PCDReader reader;
+    stringstream sstream;
+    string input_path {"/home/soham/wow/src/my_pcl_tutorial/Pure_Filter"};
+    Eigen::Matrix4d transformation_matrix = Eigen::Matrix4d::Identity();
     
     
 public:
     InteractiveICP();
     ~InteractiveICP();	 
-    int file_loader();
+    int Runner();
     void remove_nan(PointCloudT::Ptr cloud_in);
     void go_voxel(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b);
     void down_sampler(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b);
     void colour_time(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b, PointCloudT::Ptr cloud_c);
-    
+    int fileLoader(int i, int step_size, PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b, PointCloudT::Ptr cloud_c);
 };
 
 #endif

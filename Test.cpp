@@ -8,6 +8,6 @@
 
 int main(){
     InteractiveICP *n = new InteractiveICP();
-    n->file_loader();
+    n->Runner();
     delete n;
 }
