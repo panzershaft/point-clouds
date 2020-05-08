@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <vector>
 #include <pcl/io/pcd_io.h>
 #include <pcl/io/ply_io.h>
 #include <pcl/point_cloud.h>
@@ -35,14 +36,13 @@ private:
     PointCloudT::Ptr cloud_in;
     PointCloudT::Ptr cloud_tr;
     PointCloudT::Ptr cloud_icp;
+    PointCloudT::Ptr cloud_static;
     PointCloudT::Ptr cloud_model;
     int step_size;
     pcl::VoxelGrid < pcl::PointXYZ > vg;
     pcl::PCDReader reader;
     stringstream sstream;
     string input_path {"/home/soham/wow/src/my_pcl_tutorial/Pure_Filter"};
-    Eigen::Matrix4d transformation_matrix = Eigen::Matrix4d::Identity();
-    
     
 public:
     InteractiveICP();
