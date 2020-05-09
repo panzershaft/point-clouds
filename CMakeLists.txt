@@ -14,16 +14,7 @@ add_definitions(${PCL_DEFINITIONS})
 add_library(my-bin
 	    InteractiveICP.cpp
 	    InteractiveICP.hpp
-       	    ICP.cpp
-	    ICP.hpp
-	    main.cpp
 	    Test.cpp)
-
-add_executable (ICP ICP.cpp)
-target_link_libraries (ICP PRIVATE my-bin ${PCL_LIBRARIES})
-
-add_executable (main main.cpp)
-target_link_libraries (main PRIVATE my-bin ${PCL_LIBRARIES})
 
 add_executable (InteractiveICP InteractiveICP.cpp)
 target_link_libraries (InteractiveICP PRIVATE my-bin ${PCL_LIBRARIES})

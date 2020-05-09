@@ -30,9 +30,7 @@ typedef pcl::IterativeClosestPoint < pcl::PointXYZ, pcl::PointXYZ > icp;
 
 class  InteractiveICP{
 
-private:   
-    PointCloudT::Ptr cloud_one;
-    PointCloudT::Ptr cloud_two;
+private:
     PointCloudT::Ptr cloud_in;
     PointCloudT::Ptr cloud_tr;
     PointCloudT::Ptr cloud_icp;
@@ -54,14 +52,14 @@ public:
     ~InteractiveICP();	 
     int Runner();
     void remove_nan(PointCloudT::Ptr cloud_in);
-    void go_voxel(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b);
-    void down_sampler(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b);
+    void go_voxel(PointCloudT::Ptr cloud_a);
+    void down_sampler(PointCloudT::Ptr cloud_a);
     int fileLoader(int i, int step_size, PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b, PointCloudT::Ptr cloud_c);
     int PCL_file_not_found(){ PCL_ERROR("Couldn't read the file! \n"); // In case of file not being read
     return (-1);}
     int ICP_not_converged(){ PCL_ERROR("\nICP has not converged.\n");
     return (-1);}
-    Eigen::Matrix4d compute_compound_transforamtion(const std::vector<Eigen::Matrix4d> &poses);
+    Eigen::Matrix4d compute_compound_transforamtion(const vector<Eigen::Matrix4d> &poses);
 };
 
 #endif

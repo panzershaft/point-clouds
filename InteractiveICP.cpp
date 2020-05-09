@@ -11,9 +11,7 @@
 
 bool next_iteration = false;
 
-InteractiveICP::InteractiveICP(): 
-  cloud_one(new PointCloudT()),
-  cloud_two(new PointCloudT()),
+InteractiveICP::InteractiveICP():
   cloud_in(new PointCloudT()),
   cloud_tr(new PointCloudT()),
   cloud_icp(new PointCloudT()),
@@ -33,25 +31,22 @@ void InteractiveICP::remove_nan(PointCloudT::Ptr cloud_in) {
   pcl::removeNaNFromPointCloud( * cloud_in, * cloud_in, file_index1);
 }
 
-void InteractiveICP::go_voxel(PointCloudT::Ptr cloud_large, 
-                              PointCloudT::Ptr cloud_voxeled) {
-  vg.setInputCloud(cloud_large);
+void InteractiveICP::go_voxel(PointCloudT::Ptr cloud_voxeled) {
+  vg.setInputCloud(cloud_voxeled);
   vg.setLeafSize(0.01f, 0.01f, 0.01f);
   vg.filter( * cloud_voxeled);
 }
 
-void InteractiveICP::down_sampler(PointCloudT::Ptr cloud_a, 
-                                  PointCloudT::Ptr cloud_b) {
+void InteractiveICP::down_sampler(PointCloudT::Ptr cloud_a) {
   InteractiveICP::remove_nan(cloud_a);
-  InteractiveICP::go_voxel(cloud_a, cloud_b);
+  InteractiveICP::go_voxel(cloud_a);
 }
 
 
 int InteractiveICP::fileLoader(int file_index, int step_size,
-                               PointCloudT::Ptr cloud_one, 
-                               PointCloudT::Ptr cloud_two,
+                               PointCloudT::Ptr cloud_in, 
+                               PointCloudT::Ptr cloud_tr,
                                PointCloudT::Ptr cloud_icp) {
-  
   sstream << input_path << "/frame" << file_index << ".pcd";
   string file_one = sstream.str();
   sstream.str(string());
@@ -61,11 +56,11 @@ int InteractiveICP::fileLoader(int file_index, int step_size,
 
   cout << file_one << "\n" << file_two << "\n";
 
-  if (reader.read(file_one, * cloud_one) == -1){ InteractiveICP::PCL_file_not_found(); }
-  InteractiveICP::down_sampler(cloud_one, cloud_in);
+  if (reader.read(file_one, * cloud_in) == -1){ InteractiveICP::PCL_file_not_found(); }
+  InteractiveICP::down_sampler(cloud_in);
 
-  if (reader.read(file_two, * cloud_two) == -1){ InteractiveICP::PCL_file_not_found(); }
-  InteractiveICP::down_sampler(cloud_two, cloud_tr);
+  if (reader.read(file_two, * cloud_tr) == -1){ InteractiveICP::PCL_file_not_found(); }
+  InteractiveICP::down_sampler(cloud_tr);
 
   if (file_index == 0){ *cloud_static = *cloud_in; }
 
@@ -74,9 +69,8 @@ int InteractiveICP::fileLoader(int file_index, int step_size,
 }
 
  Eigen::Matrix4d InteractiveICP::compute_compound_transforamtion(const vector<Eigen::Matrix4d> &poses){
-
   final_pose = Eigen::Matrix4d::Identity();
-
+  
   for (const auto & p : poses)
     final_pose = p * final_pose;
   return final_pose;
@@ -89,7 +83,7 @@ int InteractiveICP::Runner() {
   viz viewer("Interactive ICP");
 
   for (int file_index = 0; file_index < 100; file_index+=step_size) {
-    fileLoader(file_index, step_size, cloud_one, cloud_two, cloud_icp);
+    fileLoader(file_index, step_size, cloud_in, cloud_tr, cloud_icp);
 
     transformation_matrix = Eigen::Matrix4d::Identity();
 
