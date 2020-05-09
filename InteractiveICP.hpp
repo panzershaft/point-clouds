@@ -43,6 +43,11 @@ private:
     pcl::PCDReader reader;
     stringstream sstream;
     string input_path {"/home/soham/wow/src/my_pcl_tutorial/Pure_Filter"};
+    std::vector<Eigen::Matrix4d> poses;
+    Eigen::Matrix4d final_pose;
+    Eigen::Matrix4d total_matrix;
+    Eigen::Matrix4d transformation_matrix;
+    Eigen::Matrix4d current_matrix;
     
 public:
     InteractiveICP();
@@ -51,8 +56,12 @@ public:
     void remove_nan(PointCloudT::Ptr cloud_in);
     void go_voxel(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b);
     void down_sampler(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b);
-    void colour_time(PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b, PointCloudT::Ptr cloud_c);
     int fileLoader(int i, int step_size, PointCloudT::Ptr cloud_a, PointCloudT::Ptr cloud_b, PointCloudT::Ptr cloud_c);
+    int PCL_file_not_found(){ PCL_ERROR("Couldn't read the file! \n"); // In case of file not being read
+    return (-1);}
+    int ICP_not_converged(){ PCL_ERROR("\nICP has not converged.\n");
+    return (-1);}
+    Eigen::Matrix4d compute_compound_transforamtion(const std::vector<Eigen::Matrix4d> &poses);
 };
 
 #endif

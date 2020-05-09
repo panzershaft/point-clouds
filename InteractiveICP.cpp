@@ -35,7 +35,6 @@ void InteractiveICP::remove_nan(PointCloudT::Ptr cloud_in) {
 
 void InteractiveICP::go_voxel(PointCloudT::Ptr cloud_large, 
                               PointCloudT::Ptr cloud_voxeled) {
-
   vg.setInputCloud(cloud_large);
   vg.setLeafSize(0.01f, 0.01f, 0.01f);
   vg.filter( * cloud_voxeled);
@@ -48,8 +47,7 @@ void InteractiveICP::down_sampler(PointCloudT::Ptr cloud_a,
 }
 
 
-int InteractiveICP::fileLoader(int file_index,   
-                               int step_size,
+int InteractiveICP::fileLoader(int file_index, int step_size,
                                PointCloudT::Ptr cloud_one, 
                                PointCloudT::Ptr cloud_two,
                                PointCloudT::Ptr cloud_icp) {
@@ -63,39 +61,38 @@ int InteractiveICP::fileLoader(int file_index,
 
   cout << file_one << "\n" << file_two << "\n";
 
-  reader.read(file_one, * cloud_one);
+  if (reader.read(file_one, * cloud_one) == -1){ InteractiveICP::PCL_file_not_found(); }
   InteractiveICP::down_sampler(cloud_one, cloud_in);
 
-  reader.read(file_two, * cloud_two);
+  if (reader.read(file_two, * cloud_two) == -1){ InteractiveICP::PCL_file_not_found(); }
   InteractiveICP::down_sampler(cloud_two, cloud_tr);
 
-  if (file_index == 0){
-    *cloud_static = *cloud_in;
-    *cloud_model = *cloud_static;
-  }
-  * cloud_icp = * cloud_in;
+  if (file_index == 0){ *cloud_static = *cloud_in; }
+
+  *cloud_icp = *cloud_in;
   return (0);
 }
 
- Eigen::Matrix4d compute_compound_transforamtion(const std::vector<Eigen::Matrix4d> &poses){
-  Eigen::Matrix4d final_pose = Eigen::Matrix4d::Identity();
+ Eigen::Matrix4d InteractiveICP::compute_compound_transforamtion(const vector<Eigen::Matrix4d> &poses){
 
-    for (const auto & p : poses)
-      final_pose = p * final_pose;
-    return final_pose;
+  final_pose = Eigen::Matrix4d::Identity();
+
+  for (const auto & p : poses)
+    final_pose = p * final_pose;
+  return final_pose;
   }
 
 int InteractiveICP::Runner() {
-  step_size = 10; //step_size depends on the quality of your frames, 10 works better for my files
+  step_size = 10; //step_size depends on your data, 10 works better for my files
   icp icp;
-  Eigen::Matrix4d total_matrix = Eigen::Matrix4d::Identity ();
-  std::vector<Eigen::Matrix4d> poses;
-  poses.push_back(total_matrix);
-  viz viewer("ICP example");
+  total_matrix = Eigen::Matrix4d::Identity ();
+  viz viewer("Interactive ICP");
 
   for (int file_index = 0; file_index < 100; file_index+=step_size) {
     fileLoader(file_index, step_size, cloud_one, cloud_two, cloud_icp);
-    Eigen::Matrix4d transformation_matrix = Eigen::Matrix4d::Identity ();
+
+    transformation_matrix = Eigen::Matrix4d::Identity();
+
     CustomColour icp_cloud_color_handler(cloud_icp, 80, 5, 431); // blue: cloud_icp
     viewer.removePointCloud("icp_cloud_color_handler");
     viewer.addPointCloud(cloud_icp, icp_cloud_color_handler, "icp_cloud_color_handler");
@@ -139,8 +136,7 @@ int InteractiveICP::Runner() {
             "                      red  = transformed point cloud (compunded matrix of white)\n");
           cout << "\nhas converged:" << icp.hasConverged() << " score: " << icp.getFitnessScore() << endl;
           
-          
-          Eigen::Matrix4d current_matrix = transformation_matrix * total_matrix;
+          current_matrix = transformation_matrix * total_matrix;
 
           pcl::transformPointCloud( * cloud_static, * cloud_model, current_matrix);
           cout << icp.getFinalTransformation() << endl;
@@ -150,10 +146,8 @@ int InteractiveICP::Runner() {
           viewer.updatePointCloud(cloud_static, source_cloud_color_handler, "source_cloud_color_handler");
           viewer.updatePointCloud(cloud_tr, target_cloud_color_handler, "target_cloud_color_handler");
           viewer.updatePointCloud(cloud_model, transformed_cloud_color_handler, "transformed_cloud_color_handler");
-        } else {
-          PCL_ERROR("\nICP has not converged.\n");
-          return (-1);
-        }
+        } 
+        else { InteractiveICP::ICP_not_converged(); }
       }
       next_iteration = false;
     }
