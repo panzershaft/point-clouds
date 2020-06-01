@@ -40,7 +40,7 @@ private:
     pcl::VoxelGrid < pcl::PointXYZ > vg;
     pcl::PCDReader reader;
     stringstream sstream;
-    string input_path {"/home/soham/wow/src/my_pcl_tutorial/Pure_Filter"};
+    string input_path {"/home/soham/lmr_project/3d_files/frame"};
     std::vector<Eigen::Matrix4d> poses;
     Eigen::Matrix4d final_pose;
     Eigen::Matrix4d total_matrix;

@@ -47,10 +47,10 @@ int InteractiveICP::fileLoader(int file_index, int step_size,
                                PointCloudT::Ptr cloud_in, 
                                PointCloudT::Ptr cloud_tr,
                                PointCloudT::Ptr cloud_icp) {
-  sstream << input_path << "/frame" << file_index << ".pcd";
+  sstream << input_path << file_index << ".pcd";
   string file_one = sstream.str();
   sstream.str(string());
-  sstream << input_path << "/frame" << file_index + step_size << ".pcd";
+  sstream << input_path << file_index + step_size << ".pcd";
   string file_two = sstream.str();
   sstream.str(string());
 
