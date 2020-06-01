@@ -16,6 +16,9 @@ add_library(my-bin
 	    InteractiveICP.hpp
 	    Test.cpp)
 
+##add_executable (PBVS PBVS.cpp)
+##target_link_libraries (PBVS ${PCL_LIBRARIES})
+
 add_executable (InteractiveICP InteractiveICP.cpp)
 target_link_libraries (InteractiveICP PRIVATE my-bin ${PCL_LIBRARIES})
 

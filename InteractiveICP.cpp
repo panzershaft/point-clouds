@@ -108,7 +108,7 @@ int InteractiveICP::Runner() {
     viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, "source_cloud_color_handler");
     viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, "target_cloud_color_handler");
     viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, "transformed_cloud_color_handler");
-
+    
     viewer.registerKeyboardCallback( & keyboardEventOccurred, (void * ) NULL);
     
     if (viewer.wasStopped() == true) { viewer.spinOnce(); }
