@@ -4,11 +4,6 @@
  *   
  */
 #include"InteractiveICP.hpp"
-#include <iostream>
-#include <pcl/io/pcd_io.h>
-#include <pcl/point_types.h>
-#include <pcl/filters/voxel_grid.h>
-
 bool next_iteration = false;
 
 InteractiveICP::InteractiveICP():
@@ -77,12 +72,11 @@ int InteractiveICP::fileLoader(int file_index, int step_size,
   }
 
 int InteractiveICP::Runner() {
-  step_size = 10; //step_size depends on your data, 10 works better for my files
   icp icp;
   total_matrix = Eigen::Matrix4d::Identity ();
   viz viewer("Interactive ICP");
 
-  for (int file_index = 0; file_index < 100; file_index+=step_size) {
+  for (int file_index = 0; file_index < 9; file_index+=step_size) {
     fileLoader(file_index, step_size, cloud_in, cloud_tr, cloud_icp);
 
     transformation_matrix = Eigen::Matrix4d::Identity();

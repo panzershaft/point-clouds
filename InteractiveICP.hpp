@@ -20,6 +20,10 @@
 #include <pcl/registration/icp.h>
 #include <pcl/point_types.h>
 #include <pcl/filters/voxel_grid.h>
+#include <iostream>
+#include <pcl/io/pcd_io.h>
+#include <pcl/point_types.h>
+#include <pcl/filters/voxel_grid.h>
 
 using namespace std;
 typedef pcl::PointXYZ PointT;
@@ -36,7 +40,7 @@ private:
     PointCloudT::Ptr cloud_icp;
     PointCloudT::Ptr cloud_static;
     PointCloudT::Ptr cloud_model;
-    int step_size;
+    int step_size = 1;
     pcl::VoxelGrid < pcl::PointXYZ > vg;
     pcl::PCDReader reader;
     stringstream sstream;
