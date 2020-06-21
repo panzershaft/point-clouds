@@ -144,3 +144,9 @@ int InteractiveICP::Runner() {
   }
   return (0);
 }
+
+int main(){
+    InteractiveICP *n = new InteractiveICP();
+    n->Runner();
+    delete n;
+}
