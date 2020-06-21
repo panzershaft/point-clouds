@@ -21,17 +21,13 @@ include_directories(include ${catkin_INCLUDE_DIRS} ${PCL_INCLUDE_DIRS})
 
 add_library(my-bin
 	    src/InteractiveICP.cpp
-	    src/InteractiveICP.hpp
-	    src/Test.cpp)
+	    src/InteractiveICP.hpp)
 
 ##add_executable (PBVS PBVS.cpp)
 ##target_link_libraries (PBVS ${PCL_LIBRARIES})
 
 add_executable (InteractiveICP src/InteractiveICP.cpp)
 target_link_libraries (InteractiveICP PRIVATE my-bin ${catkin_LIBRARIES})
-
-add_executable (Test src/Test.cpp)
-target_link_libraries (Test PRIVATE my-bin ${catkin_LIBRARIES})
 
 add_executable(talker src/talker.cpp)
 target_link_libraries(talker ${catkin_LIBRARIES})
