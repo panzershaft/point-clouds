@@ -2,3 +2,17 @@
 build/
 
 \.vscode/
+
+interactive_header\.txt
+
+interactive_verion\.txt
+
+matrix_transform\.hpp
+
+multiple_header\.txt
+
+multiple_icp\.txt
+
+concatenate_cloud\.cpp
+
+

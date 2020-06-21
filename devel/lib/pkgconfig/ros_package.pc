@@ -1,0 +1,8 @@
+prefix=/home/soham/lmr_project/devel
+
+Name: ros_package
+Description: Description of ros_package
+Version: 0.0.0
+Cflags: -I/home/soham/lmr_project/devel/include
+Libs: -L/home/soham/lmr_project/devel/lib 
+Requires: 
