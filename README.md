@@ -15,7 +15,7 @@ Although the project at this stage is still plain C++ without any ROS libraries 
 Files of interest for Visual servoing are InteractiveICP.cpp and InteractiveICP.hpp .
 (others files are about normal ROS stuff)
 
-How to execute (use Terminator with atleast 2 shells):
+How to execute (use Terminator with atleast 2 terminals open):
 ```
 T1:
 cd ~/project/
